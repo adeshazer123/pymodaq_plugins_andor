@@ -3,6 +3,7 @@ from easydict import EasyDict as edict
 from pymodaq.control_modules.move_utility_classes import DAQ_Move_base, comon_parameters_fun, main, DataActuatorType,\
     DataActuator 
 from pymodaq.utils.daq_utils import ThreadCommand
+from pymodaq.utils.parameter import Parameter
 from typing import List, Dict, Union
 from pymodaq_plugins_andor.hardware import shamrock_sdk
 
@@ -40,7 +41,7 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
             ]},
         ] + comon_parameters_fun(is_multiaxes, axes_names, epsilon=_epsilon)
 
-    def commit_settings(self, param):
+    def commit_settings(self, param: Parameter):
         """
             | Activate parameters changes on the hardware from parameter's name.
             |
@@ -92,15 +93,16 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
             * controller (object) initialized controller
             *initialized: (bool): False if initialization failed otherwise True
         """
-        self.shamrock_controller = self.ini_stage_init(old_controller=controller,
-                                                       new_controller=shamrock_sdk.ShamrockSDK())
+        self.ini_stage_init(slave_controller=controller)
 
-        self.emit_status(ThreadCommand('show_splash', "Set/Get Shamrock's settings"))
-        self.ini_spectro()
+        if self.is_master: 
+            self.controller = shamrock_sdk.ShamrockSDK()
+            self.emit_status(ThreadCommand('show_splash', "Set/Get Shamrock's settings"))
+            self.ini_spectro()
 
         initialized = True
         self.emit_status(ThreadCommand('close_splash'))
-        return '', initialized
+        return 'Shamrock DAQ_Move Initialized', initialized
 
     def get_actuator_value(self):
         """Get the current position from the hardware with scaling conversion.
