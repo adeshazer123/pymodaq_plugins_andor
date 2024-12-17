@@ -533,6 +533,7 @@ class DAQ_2DViewer_AndorCCD(DAQ_Viewer_base):
             # %%%%% Start acquisition with the given exposure in ms, in "1d" or "2d" mode
             self.camera_controller.StartAcquisition()
             self.callback_signal.emit(self.Naverage)  # will trigger the waitfor acquisition
+            # ?? Need to add self.dte_signal.emit?
 
         except Exception as e:
             self.emit_status(ThreadCommand('Update_Status', [str(e), "log"]))
