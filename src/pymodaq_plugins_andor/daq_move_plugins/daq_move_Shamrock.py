@@ -117,7 +117,7 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
         pos = self.get_position_with_scaling(pos)
         return pos
 
-    def move_abs(self, position):
+    def move_abs(self, position: DataActuator):
         """ Move the actuator to the absolute target defined by position
 
         Parameters
@@ -135,7 +135,7 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
         self.target_position = position
         self.poll_moving()  # start a loop to poll the current actuator value and compare it with target position
 
-    def move_rel(self, position):
+    def move_rel(self, position: DataActuator):
         """ Move the actuator to the relative target actuator value defined by position
 
         Parameters
@@ -152,7 +152,7 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
 
     def move_home(self):
         """
-
+        Move the actuator to the home position.
         """
         self.move_abs(self.settings.child('spectro_settings', 'spectro_wl_home').value())
 
