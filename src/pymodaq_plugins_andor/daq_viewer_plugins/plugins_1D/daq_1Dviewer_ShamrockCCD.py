@@ -161,7 +161,9 @@ class DAQ_1DViewer_ShamrockCCD(DAQ_2DViewer_AndorCCD, DAQ_Move_Shamrock):
     def grab_data(self, Naverage=1, **kwargs):
         if not self.is_calibrated:
             self.get_xaxis()
-        DAQ_2DViewer_AndorCCD.grab_data(self, Naverage, **kwargs)
+        data_tot = DAQ_2DViewer_AndorCCD.grab_data(self, Naverage, **kwargs)
+        self.dte_signal.emit(DataToExport(name = 'ShamrockCCD', data = [DataFromPlugins(name = 'ShamrockCCD', data = data_tot, 
+                                                                                        dim = 'Data1D', labels = ['Wavelength (nm)'], x_axis = self.x_axis)]))
 
     def emit_data(self):
         """
