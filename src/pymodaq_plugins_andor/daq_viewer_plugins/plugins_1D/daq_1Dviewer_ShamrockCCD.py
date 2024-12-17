@@ -83,10 +83,13 @@ class DAQ_1DViewer_ShamrockCCD(DAQ_2DViewer_AndorCCD, DAQ_Move_Shamrock):
         QtWidgets.QApplication.processEvents()
 
         initialized = shamrock_initialized and camera_initialized
-
+        data_x_axis = self.get_xaxis()
+        self.x_axis = Axis(data = data_x_axis, label = '', units = '', index = 0)
         self.setCalibration()
-        #self.emit_status(ThreadCommand('close_splash'))
-        return '', initialized
+        self.dte_signal_temp.emit(DataToExport(name = 'ShamrockCCD', data = [DataFromPlugins(name = 'ShamrockCCD', data = [np.zeros((self.get_ROI_size_x()))], 
+                                                                                             dim = 'Data1D', labels = ['Wavelength (nm)'], x_axis = self.x_axis)]))
+
+        return 'ShamRockCCD Initialized', initialized
 
     def setCalibration(self):
         #setNpixels
