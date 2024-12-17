@@ -4,9 +4,9 @@ import ctypes
 from ctypes.util import find_library
 import platform
 from qtpy import QtWidgets, QtCore
+from pymodaq.utils.parameter import Parameter
 from easydict import EasyDict as edict
 from pymodaq.control_modules.viewer_utility_classes import DAQ_Viewer_base, comon_parameters, main
-
 from pymodaq.utils.data import DataFromPlugins, Axis, DataToExport
 from pymodaq.utils.daq_utils import ThreadCommand, find_dict_in_list_from_key_val
 from pymodaq.utils.parameter.utils import iter_children
@@ -149,7 +149,7 @@ class DAQ_2DViewer_AndorCCD(DAQ_Viewer_base):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updated_timer)
 
-    def commit_settings(self, param):
+    def commit_settings(self, param: Parameter):
         """
             | Activate parameters changes on the hardware from parameter's name.
             |
@@ -320,12 +320,14 @@ class DAQ_2DViewer_AndorCCD(DAQ_Viewer_base):
             --------
             daq_utils.ThreadCommand, hardware1D.DAQ_1DViewer_Picoscope.update_pico_settings
         """
+        self.ini_detector_init(slave_controller = controller)
 
-        self.camera_controller = self.ini_detector_init(old_controller=controller,
-                                                        new_controller=sdk2.AndorSDK())
-
-        self.emit_status(ThreadCommand('show_splash', "Set/Get Camera's settings"))
-        self.ini_camera()
+        if self.is_master: 
+            self.controller = sdk2.AndorSDK()
+            self.emit_status(ThreadCommand('show_splash', "Set/Get Camera's settings"))
+            self.ini_camera()
+        # self.camera_controller = self.ini_detector_init(old_controller=controller,
+        #                                                 new_controller=sdk2.AndorSDK())
 
         # %%%%%%% init axes from image
         self.x_axis = self.get_xaxis()
@@ -333,7 +335,7 @@ class DAQ_2DViewer_AndorCCD(DAQ_Viewer_base):
 
         self.emit_status(ThreadCommand('close_splash'))
 
-        info = ""
+        info = "AndorCCD initialized"
         initialized = True
         return info, initialized
 
