@@ -151,6 +151,7 @@ class DAQ_1DViewer_ShamrockCCD(DAQ_2DViewer_AndorCCD, DAQ_Move_Shamrock):
 
     def stop(self):
         DAQ_2DViewer_AndorCCD.stop(self)
+        return "ShamrockCCD stopped"
 
     def close(self):
         if self.camera_controller is not None:
