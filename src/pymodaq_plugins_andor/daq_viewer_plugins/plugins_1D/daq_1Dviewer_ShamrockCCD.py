@@ -5,7 +5,8 @@ from pymodaq_plugins_andor.daq_viewer_plugins.plugins_2D.daq_2Dviewer_AndorCCD i
 from pymodaq_plugins_andor.daq_move_plugins.daq_move_Shamrock import DAQ_Move_Shamrock
 
 from pymodaq.utils.daq_utils import ThreadCommand, find_dict_in_list_from_key_val
-from pymodaq.utils.data import Axis, DataFromPlugins
+from pymodaq.utils.data import Axis, DataFromPlugins, DataToExport
+from pymodaq.control_modules.viewer_utility_classes import DAQ_Viewer_base, comon_parameters, main
 from pymodaq.utils.parameter import utils as putils
 from pymodaq.control_modules.viewer_utility_classes import main
 from pymodaq.utils.logger import set_logger, get_module_name
@@ -34,7 +35,7 @@ class DAQ_1DViewer_ShamrockCCD(DAQ_2DViewer_AndorCCD, DAQ_Move_Shamrock):
     if d is not None:
         d['visible'] = True
 
-    params = [{'title': 'Get Calibration:', 'name': 'get_calib', 'type': 'bool_push', 'value': False,
+    params = comon_parameters+[{'title': 'Get Calibration:', 'name': 'get_calib', 'type': 'bool_push', 'value': False,
               'label': 'Update!'}] + param_camera + params_shamrock
 
     def __init__(self, parent=None, params_state=None):
