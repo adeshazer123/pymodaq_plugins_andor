@@ -1,7 +1,9 @@
 
 from easydict import EasyDict as edict
-from pymodaq.control_modules.move_utility_classes import DAQ_Move_base, comon_parameters_fun, main
+from pymodaq.control_modules.move_utility_classes import DAQ_Move_base, comon_parameters_fun, main, DataActuatorType,\
+    DataActuator 
 from pymodaq.utils.daq_utils import ThreadCommand
+from typing import List, Dict, Union
 from pymodaq_plugins_andor.hardware import shamrock_sdk
 
 
@@ -12,8 +14,9 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
 
     _controller_units = 'nm'
     is_multiaxes = False
-    axes_names = []  # "list of strings of the multiaxes
-    _epsilon = 0.1
+    axes_names = Union[List[str], Dict[str, int]] = []
+    _epsilon = Union[float, List[float]] = 0.1
+    data_actuator_type = DataActuatorType.DataActuator
 
     params = [
         {'title': 'Dll library:', 'name': 'andor_lib', 'type': 'browsepath', 'value': str(libpath), 'readonly': True},
