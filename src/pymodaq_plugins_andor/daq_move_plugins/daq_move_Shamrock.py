@@ -41,9 +41,6 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
             ]},
         ] + comon_parameters_fun(is_multiaxes, axes_names, epsilon=_epsilon)
     
-    def ini_attributes(self): 
-        self.controller: shamrock_sdk.ShamrockSDK = None
-
     def commit_settings(self, param: Parameter):
         """
             | Activate parameters changes on the hardware from parameter's name.
