@@ -40,6 +40,9 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
                 {'title': 'Go to zero order:', 'name': 'zero_order', 'type': 'bool'},
             ]},
         ] + comon_parameters_fun(is_multiaxes, axes_names, epsilon=_epsilon)
+    
+    def ini_attributes(self): 
+        self.controller: shamrock_sdk.ShamrockSDK = None
 
     def commit_settings(self, param: Parameter):
         """
@@ -98,7 +101,7 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
         if self.is_master: 
             self.controller = shamrock_sdk.ShamrockSDK()
             self.emit_status(ThreadCommand('show_splash', "Set/Get Shamrock's settings"))
-            self.ini_spectro()
+            self.ini_attributes()
 
         initialized = True
         self.emit_status(ThreadCommand('close_splash'))
@@ -191,7 +194,7 @@ class DAQ_Move_Shamrock(DAQ_Move_base):
             self.settings.child('spectro_settings', 'spectro_wl').setValue(wl)
         return float(wl)
 
-    def ini_spectro(self):
+    def ini_attributes(self):
         self.settings.child('spectro_settings', 'spectro_serialnumber').setValue(
             self.shamrock_controller.GetSerialNumberSR(0)[1].decode())
 
